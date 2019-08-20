@@ -1,0 +1,4 @@
+#!/bin/bash
+az login -u roman.rainero@amaris.com -p sF%2A4r@
+az extension add --name azure-devops
+az extension show --name azure-devops
