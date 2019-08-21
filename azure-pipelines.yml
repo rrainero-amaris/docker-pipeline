@@ -21,9 +21,15 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - task: Docker@2
-      displayName: Build an image
+      displayName: Login to ACR
       inputs:
-        command: build
-        dockerfile: '**/Dockerfile'
+        command: login
+        containerRegistry: acrAmaris-conn
+    - task: Docker@2
+      displayName: Build and Push
+      inputs:
+        command: buildAndPush
+        containerRegistry: acrAmaris-conn
+        repository: testRepo
         tags: |
           $(tag)
