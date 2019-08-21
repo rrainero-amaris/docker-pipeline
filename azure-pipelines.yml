@@ -20,6 +20,9 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
+    - task: HelmInstaller@1
+      inputs:
+        helmVersionToInstall: 'latest'
     - task: Docker@2
       displayName: Build and Push
       inputs:
@@ -28,3 +31,19 @@ stages:
         repository: testRepo
         tags: |
           $(tag)
+    - task: HelmDeploy@0
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscription: 'Azure Pass - Sponsorship (73c12a5d-dd45-4dd6-8765-7a2eb5731a31)'
+        azureResourceGroup: 'devops-rg'
+        kubernetesCluster: 'aks-amaris'
+        command: 'init'
+        arguments: '--client-only'
+    - task: HelmDeploy@0
+      inputs:
+        azureSubscription: 'Azure Pass - Sponsorship (73c12a5d-dd45-4dd6-8765-7a2eb5731a31)'
+        azureResourceGroup: 'devops-rg'
+        kubernetesCluster: 'aks-amaris'
+        useClusterAdmin: true
+        command: 'package'
+        chartPath: './test'
